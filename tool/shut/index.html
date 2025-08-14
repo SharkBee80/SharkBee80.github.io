@@ -10,11 +10,14 @@
 
 <body>
   <script>
-    setTimeout(function () {
-      //window.location.href = "https://www.google.com/";
+    try {
+      window.opener = null;
+      window.open('', '_self');
       window.close();
-    }, 500);
-    
+    } catch (e) {
+      // 出错时跳转
+      window.location.href = 'about:blank';
+    }
   </script>
 </body>
 
