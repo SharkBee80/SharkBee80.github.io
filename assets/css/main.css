@@ -923,7 +923,8 @@ html {
 html,
 body {
   height: 100%;
-  font-family: var(--font-family-sans-serif);
+  /* font-family: var(--font-family-sans-serif); */
+  font-family:Comic Sans MS,Helvetica Neue,Microsoft Yahei,-apple-system,sans-serif!important;
   overflow-wrap: break-word;
 }
 
@@ -2687,6 +2688,6 @@ input[type=checkbox] {
   }
 }
 
-.home-main {
-  min-height: calc(100vh - 4rem - 1.25rem - 1rem - 12px - 1rem);
-}
+/* .home-main {
+  min-height: calc(100vh - (1.25rem + 10px + 10px) - (4rem + 1.5rem) - 2rem);
+} */
