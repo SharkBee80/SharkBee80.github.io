@@ -1,15 +1,3 @@
-(function (window, document) {
-    var typing = Fluid.plugins.typing;
-    var subtitle = document.getElementById('subtitle');
-    if (!subtitle || !typing) {
-        return;
-    }
-    var text = subtitle.getAttribute('data-typed-text');
-
-    typing(text);
-
-})(window, document);
-
 var Fluid = window.Fluid || {};
 Fluid.ctx = Object.assign({}, Fluid.ctx)
 var CONFIG = {
