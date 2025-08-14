@@ -16,11 +16,10 @@
 }
 
 /* 自定义 */
-
-.icon-setting:before {
-  content: "\f0001";
+.icon-tool-fill:before {
+    content: "\f0001";
 }
 
-.icon-tool:before {
-    content: "\f0002";
+.icon-setting-fill:before {
+  content: "\f0002";
 }
