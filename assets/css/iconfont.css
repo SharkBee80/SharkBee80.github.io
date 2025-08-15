@@ -23,3 +23,11 @@
 .icon-setting-fill:before {
   content: "\f0002";
 }
+
+.icon-browser-fill:before {
+  content: "\f0003";
+}
+
+.icon-blog-fill:before {
+  content: "\f0004";
+}

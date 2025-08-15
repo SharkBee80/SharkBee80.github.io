@@ -69,6 +69,9 @@ Fluid.events = {
     if (scrollbar.length === 0) {
       return;
     }
+    if (window.getComputedStyle(scrollbar[0]).display !== 'none'){
+      $('body').attr('style', 'overflow-y: hidden;');
+    };
     scrollbar.on('click', function () {
       //Fluid.utils.scrollToElement('#board', -jQuery('#navbar').height());
       $('.header-inner').animate({
