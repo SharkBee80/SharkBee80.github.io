@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="tosscoin flipCoin" />
+    <title>抛硬币</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            user-select: none;
+        }
+
+        .main {
+            margin-top: 12vh;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin: auto;
+        }
+
+        #coin {
+            width: 10rem;
+            height: 10rem;
+            border-radius: 50%;
+            position: relative;
+            margin: 20px auto;
+            background-color: #d4af3700;
+            transform-style: preserve-3d;
+            /* 启用3D变换 */
+        }
+
+        #coin img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            pointer-events: none;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            /* 添加这个来确保兼容iOS */
+            /* 隐藏背面 */
+        }
+
+        #coin #imgt {
+            transform: rotateY(180deg);
+            /* 初始反面旋转180度 */
+        }
+
+        .flip {
+            transform: rotateY(3600deg);
+            /* 旋转10圈 */
+        }
+
+        #result {
+            font-size: 44px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: auto;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        #picture {
+            color: rgba(0, 0, 0, 0.25);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <h1>抛硬币</h1>
+        <div id="coin">
+            <img id="imgh" src="img/head.webp" alt="正面" style="display: block;">
+            <img id="imgt" src="img/tail.webp" alt="反面" style="display: none;">
+        </div>
+        <button id="flipButton" onclick="flipCoin()">抛硬币</button>
+        <div id="result">--</div>
+        <a id="picture" href="https://www.zcool.com.cn/work/ZMjYwMjU2NDQ=.html">coins来源</a>
+    </div>
+    <script>
+        //const head = "img/Coins/head.webp";
+        //const tail = "img/Coins/tail.webp";
+        const coin = document.getElementById("coin");
+        const imgh = document.getElementById("imgh");
+        const imgt = document.getElementById('imgt')
+        const result = document.getElementById("result");
+        const button = document.getElementById("flipButton");
+        let deg = 0;
+        let ishead = true;
+        let intervalId;
+        let intervalId2;
+        let ani = false;
+
+        // 初始化图片
+
+        function flipCoin() {
+            if (intervalId) clearInterval(intervalId); ani = false;
+
+            // 禁用按钮，防止多次点击
+            button.disabled = true;
+            result.textContent = '--';
+            const ms = 120;
+            // 动画效果
+            circle(ms);
+
+            // 等待动画结束后更新结果
+            setTimeout(() => {
+
+                // 随机生成硬币结果
+                const outcome = Math.random() < 0.5 ? "正面" : "反面";
+                const targetIsHead = outcome === "正面";
+
+                // 结束动画前，确保最终的 ishead 与 outcome 匹配
+                intervalId2 = setInterval(() => {
+                    if (ishead !== targetIsHead) {
+                        deg180(ms); // 继续翻转，直到 ishead 符合 outcome
+                        endflipCoin(outcome);
+                    } else {
+                        endflipCoin(outcome);
+                    }
+                }, ms / 2);
+
+
+            }, 1000);  // 动画时长1秒
+        }
+
+        /*
+        // 封装一个延迟函数
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }*/
+
+        /**
+         * 旋转硬币动画
+         * @param {number} transform 旋转动画时长（毫秒）
+         */
+        function deg180(ms = 200) { // 默认 200ms
+
+
+            // 使用 async/await 确保按顺序执行
+            (async () => {
+                // 重设deg
+                deg = deg % 360
+
+                // 设置旋转动画时长
+                coin.style.transition = `${ms / 1000 / 2}s ease-in`; // linear , ease-in-out
+                coin.style.transform = `rotateY(${deg += 90}deg)`;
+                await new Promise(resolve => setTimeout(resolve, ms / 2));
+
+                imgh.style.display = ishead ? 'none' : 'block';
+                imgt.style.display = ishead ? 'block' : 'none';
+                ishead = !ishead;
+                //console.log('ishead:', ishead);
+                coin.style.transition = `${ms / 1000 / 2}s ease-out`;
+                coin.style.transform = `rotateY(${deg += 90}deg)`;
+                await new Promise(resolve => setTimeout(resolve, ms / 2));
+            })();
+        }
+
+        async function circle(ms = 200) {// 旋转
+            intervalId = setInterval(() => deg180(ms), ms);
+        }
+
+        function endflipCoin(outcome) { //结束
+            clearInterval(intervalId);
+            clearInterval(intervalId2);
+            // 显示结果
+            result.textContent = outcome;
+
+            // 恢复按钮可点击状态
+            button.disabled = false;
+        }
+
+        coin.addEventListener('click', () => {
+            if (button.disabled) {
+                return;
+            }
+            else if (!ani) {
+                ani = true;
+                circle(180);
+                result.textContent = '--';
+            } else {
+                ani = false;
+                if (intervalId) clearInterval(intervalId);
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
