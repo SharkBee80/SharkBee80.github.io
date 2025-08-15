@@ -8,3 +8,7 @@ document.addEventListener('wheel', function (event) {
         document.removeEventListener('wheel', arguments.callee);
     }
 });
+
+window.onbeforeunload = function (e) {
+    $('html, body').animate({ scrollTop: 0 }, 'fast');
+};

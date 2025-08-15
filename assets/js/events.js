@@ -66,20 +66,21 @@ Fluid.events = {
 
   registerScrollDownArrowEvent: function () {
     var scrollbar = jQuery('.scroll-down-bar');
+    const body = jQuery('body');
+    const header_inner = jQuery('.header-inner');
+
     if (scrollbar.length === 0) {
       return;
     }
-    if (window.getComputedStyle(scrollbar[0]).display !== 'none'){
-      $('body').attr('style', 'overflow-y: hidden;');
-    };
+    body.attr('style', 'overflow-y: hidden;');
     scrollbar.on('click', function () {
       //Fluid.utils.scrollToElement('#board', -jQuery('#navbar').height());
-      $('.header-inner').animate({
+      header_inner.animate({
         'height': '60vh'
       },
         easing = 'swing',
-        callback = () => $('body').attr('style', '')
-      )
+        callback = () => body.attr('style', '')
+      );
       $('#board').attr('style', '');
       scrollbar.hide();
     });

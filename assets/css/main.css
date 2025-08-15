@@ -33,7 +33,7 @@ h6:hover>.anchorjs-link {
   transition: transform 0.05s ease-out;
 }
 
-@media (max-width: 100vh) {
+/* @media (max-width: 100vh) {
   .header-inner {
     max-height: 100vw;
   }
@@ -47,7 +47,7 @@ h6:hover>.anchorjs-link {
   .scroll-down-bar {
     display: none;
   }
-}
+} */
 
 #board {
   position: relative;
@@ -924,7 +924,7 @@ html,
 body {
   height: 100%;
   /* font-family: var(--font-family-sans-serif); */
-  font-family:Comic Sans MS,Helvetica Neue,Microsoft Yahei,-apple-system,sans-serif!important;
+  font-family: Comic Sans MS, Helvetica Neue, Microsoft Yahei, -apple-system, sans-serif !important;
   overflow-wrap: break-word;
 }
 
