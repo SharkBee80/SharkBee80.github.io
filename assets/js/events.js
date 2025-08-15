@@ -66,12 +66,19 @@ Fluid.events = {
 
   registerScrollDownArrowEvent: function () {
     var scrollbar = jQuery('.scroll-down-bar');
-    const body = jQuery('body');
-    const header_inner = jQuery('.header-inner');
-
     if (scrollbar.length === 0) {
       return;
     }
+    var body = jQuery('body');
+    var header_inner = jQuery('.header-inner');
+
+    document.addEventListener('wheel', function (event) {
+      if (event.deltaY > 0) {
+        scrollbar.click();
+        document.removeEventListener('wheel', arguments.callee);
+      };
+    });
+
     body.attr('style', 'overflow-y: hidden;');
     scrollbar.on('click', function () {
       //Fluid.utils.scrollToElement('#board', -jQuery('#navbar').height());
