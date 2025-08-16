@@ -1,0 +1,150 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "微软雅黑";
+  overflow: hidden;
+  user-drag: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+button {
+  outline: none;
+}
+
+#all {
+  width: 100%;
+  height: auto;
+  position: absolute;
+}
+
+#start {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-image: url(img/startbg.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  z-index: 1;
+}
+
+#start button {
+  position: absolute;
+  top: calc(50vh * 568 / 400);
+  left: calc(50vw - 75px);
+  width: 150px;
+  height: 50px;
+  border: 1px solid dimgray;
+  border-radius: 50px;
+  background-color: #c4c9ca;
+}
+
+#main {
+  width: 100vw;
+  height: 100vh;
+  background-image: url(img/background_1.png);
+}
+
+#main img {
+  position: absolute;
+  z-index: 0;
+}
+
+#scorediv {
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  /* display: none; */
+}
+
+#menu {
+  font-size: 20px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  /* display: none; */
+}
+
+#menu button {
+  width: 25px;
+  height: 25px;
+  font-weight: bold;
+  border: 2px solid dimgray;
+  border-radius: 50px;
+  background-color: #c4c9ca;
+}
+
+#suspend {
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  top: calc(50vh);
+  left: calc(50vw - 75px);
+  display: none;
+  z-index: 2;
+}
+
+#suspend button {
+  width: 150px;
+  height: 30px;
+  margin-bottom: 20px;
+  border: 1px solid dimgray;
+  border-radius: 30px;
+  background-color: #c4c9ca;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #a9adad !important;
+}
+
+#end {
+  position: absolute;
+  width: 180px;
+  height: 240px;
+  top: calc(100vh * 230 / 568 - 120px);
+  left: calc(50vw - 90px);
+  border: 1px solid dimgray;
+  border-radius: 5px;
+  text-align: center;
+  background-color: #d7ddde;
+  display: none;
+  z-index: 2;
+}
+
+#end .head {
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+#end div {
+  width: 100%;
+  height: 80px;
+}
+
+#end div button {
+  width: 100px;
+  height: 30px;
+  margin-top: 9px;
+  border: 1px solid dimgray;
+  border-radius: 50px;
+}
+
+#result {
+  width: 100%;
+  height: 100px;
+  border-top: 1px solid dimgray;
+  border-bottom: 1px solid dimgray;
+  font-size: 34px;
+  line-height: 100px;
+}

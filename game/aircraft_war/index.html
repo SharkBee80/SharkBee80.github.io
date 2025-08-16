@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>微信打飞机</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+</head>
+
+<body>
+    <div id="all">
+        <div id="start">
+            <button id="start_btn">开始游戏</button>
+        </div>
+        <div id="main">
+            <div id="scorediv">
+                <label>分数：</label>
+                <label id="label">0</label>
+            </div>
+            <div id="menu">
+                <svg class="icon" viewBox="0 0 1024 1024" width="32" height="32" onclick="pause()">
+                    <path
+                        d="M533.333333 896C332.8 896 170.666667 733.866667 170.666667 533.333333S332.8 170.666667 533.333333 170.666667 896 332.8 896 533.333333 733.866667 896 533.333333 896z m0-42.666667c174.933333 0 320-145.066667 320-320S708.266667 213.333333 533.333333 213.333333 213.333333 358.4 213.333333 533.333333 358.4 853.333333 533.333333 853.333333zM469.333333 426.666667v213.333333h-42.666666v-213.333333h42.666666z m170.666667 0v213.333333h-42.666667v-213.333333h42.666667z"
+                        fill="#000" p-id="1651" data-darkreader-inline-fill=""
+                        style="--darkreader-inline-fill: var(--darkreader-background-444444, #3c4243);"></path>
+                </svg>
+            </div>
+            <div id="suspend">
+                <button>重新开始</button>
+                <button>继续游戏</button>
+                <button>回到主页</button>
+            </div>
+            <div id="end">
+                <p class="head">飞机大战分数</p>
+                <p id="result">0</p>
+                <div>
+                    <button onclick="restart()">继续</button>
+                    <button onclick="again()">回到主页</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="main.js" type="text/javascript" charset="utf-8"></script>
