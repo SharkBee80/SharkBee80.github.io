@@ -11,7 +11,7 @@
 <body>
     <div id="all">
         <div id="start">
-            <button id="start_btn">开始游戏</button>
+            <button onclick="begin()">开始游戏</button>
         </div>
         <div id="main">
             <div id="scorediv">
@@ -29,14 +29,14 @@
             <div id="suspend">
                 <button onclick="restart()">重新开始</button>
                 <button onclick="pause()">继续游戏</button>
-                <button onclick="again()">回到主页</button>
+                <button onclick="back()">回到主页</button>
             </div>
             <div id="end">
                 <p class="head">飞机大战分数</p>
                 <p id="result">0</p>
                 <div>
                     <button onclick="restart()">继续</button>
-                    <button onclick="again()">回到主页</button>
+                    <button onclick="back()">回到主页</button>
                 </div>
             </div>
         </div>

@@ -25,15 +25,18 @@ var width = window.innerWidth;
 var height = window.innerHeight;
 
 // config配置
+var callback = false;// 是否回调
 // game
 var gamespeed = 40; // 游戏速度 40
 var gamehardX = 1; // 游戏难度倍数 1
-var outline = true; // 出线为输
+var gamebgspeedX = 1; // 背景速度
+var outline = false; // 出线为输
 // enemy
 var enemyhpX = 1 * gamehardX; // 敌人血量倍数 1
 var enemyspeedX = 1 * gamehardX; // 敌人速度倍数 1
 // bullet
 var bulletdamage = 1; // 子弹伤害 1
+var bulletspeedX = 1; // 子弹速度倍数 1
 var bulletImage = "img/bullet1.png";
 // self
 // var selfhp = 1 * gamehardX; // 自身血量 1
@@ -82,12 +85,13 @@ function bullet(X, Y, width, height, imagesrc) {
     this.bulletY = Y;
     this.bulletimage = null;
     this.bulletattach = bulletdamage;
+    this.bulletspeed = 20 * bulletspeedX;
     this.bulletwidth = width;
     this.bulletheight = height;
 
     // 移动行为
     this.bulletmove = function () {
-        this.bulletimage.style.top = this.bulletimage.offsetTop - 20 + 'px';
+        this.bulletimage.style.top = this.bulletimage.offsetTop - this.bulletspeed + 'px';
     }
     this.init = function () {
         this.bulletimage = document.createElement('img');
@@ -154,11 +158,13 @@ var restart = function () {
         main.removeChild(item.imagenode);
     });
     enemys = [];
+    enemyslen = 0;
     // 清子弹
     bullets.forEach(function (item) {
         main.removeChild(item.bulletimage);
     });
     bullets = [];
+    bulletslen = 0;
     // 显示游戏界面
     suspend.style.display = 'none';
     main.style.display = 'block';
@@ -219,19 +225,18 @@ var removeListen = () => {
 // 暂停事件
 var pauseNumber = 0;
 var pause = function (num = pauseNumber) {
-    if (num == 0) {
+    if (num == 0 && _status) {
         suspend.style.display = 'block';
-        removeListen();
-        clearInterval(set);
+        stopGame();
         pauseNumber = 1;
     } else {
         suspend.style.display = 'none';
-        eventListen();
-        set = setInterval(begin, gamespeed);
+        startGame();
         pauseNumber = 0;
     }
-    console.log(num);
+    callBackF('暂停：', num);
 }
+
 // 判断本方飞机是否飞出边界，如果飞出边界，则移除mousemove事件，反之加上mousemove事件
 var border = function (e) {
     if (istouch) e = e.touches[0];
@@ -256,13 +261,22 @@ var mark = 0;
 var mark1 = 0;
 var backgroundPositionY = 0;
 
-// 开始函数
-function begin() {
+/* 开始函数 */
+// 循环播放
+var gameInterval;
+var enemyInterval;
+var bulletInterval;
+var crashInterval;
+function gameInter() {
     main.style.backgroundPositionY = backgroundPositionY + "px";
-    backgroundPositionY += 0.5;
-    if (backgroundPositionY == height) {
-        backgroundPositionY = 0;
+    backgroundPositionY += 0.5 * gamebgspeedX;
+    // if (backgroundPositionY == height) {
+    //     backgroundPositionY = 0;
+    // }
+    if (scores % 1000) {
+        gamebgspeedX += 0.01;
     }
+
     mark++;
 
     // 创建敌方飞机
@@ -283,22 +297,24 @@ function begin() {
 
     // 移动敌方飞机
     var enemyslen = enemys.length;
+
     for (var i = 0; i < enemyslen; i++) {
         if (enemys[i].planeisdie != true) {
             enemys[i].planemove();
         }
 
         // 如果敌方飞机超出边界，则删除敌机
-        if (enemys[i].imagenode.offsetTop > height && outline) {
+        if (enemys[i].imagenode.offsetTop > height) {
             main.removeChild(enemys[i].imagenode);
             enemys.splice(i, 1);
             enemyslen--;
-            selfplane.planehp = selfplane.planehp - 1;
-            selfplane.imagenode.src = "img/本方飞机爆炸.gif";
-            end.style.display = 'block';
-            result.innerHTML = scores;
-            removeListen();
-            clearInterval(set);
+            if (outline) {
+                selfplane.planehp = selfplane.planehp - 1;
+                selfplane.imagenode.src = "img/本方飞机爆炸.gif";
+                end.style.display = 'block';
+                result.innerHTML = scores;
+                stopGame();
+            }
         }
         if (enemys[i].imagenode.offsetLeft < 0 || enemys[i].imagenode.offsetLeft > width) {
             main.removeChild(enemys[i].imagenode);
@@ -323,7 +339,7 @@ function begin() {
     }
 
     // 移动子弹
-    var bulletslen = bullets.length;
+    bulletslen = bullets.length;
     for (var i = 0; i < bulletslen; i++) {
         bullets[i].bulletmove();
 
@@ -346,8 +362,8 @@ function begin() {
                         selfplane.imagenode.src = "img/本方飞机爆炸.gif";
                         end.style.display = 'block';
                         result.innerHTML = scores;
-                        removeListen();
-                        clearInterval(set);
+                        stopGame();
+                        callBackF('分数：', scores);
                     }
                 }
             }
@@ -374,18 +390,62 @@ function begin() {
         }
     }
 }
+
+function enemyInter() {
+
+}
+
+function bulletInter() {
+
+}
+
+function crashInter() {
+
+}
+
+function startGame() {
+    if (_status) return;
+    try {
+        eventListen();
+        gameInterval = setInterval(gameInter, gamespeed);
+        // enemyInterval = setInterval(enemyInter, gamespeed / enemyspeedX);
+        // bulletInterval = setInterval(bulletInter, gamespeed / bulletspeedX);
+        // crashInterval = setInterval(crashInter, Math.min(gamespeed / enemyspeedX, gamespeed / bulletspeedX));
+        _status = true;
+        callBackF(_status);
+    } catch (e) {
+        callBackF(e);
+    }
+};
+
+function stopGame() {
+    if (!_status) return;
+    try {
+        removeListen();
+        clearInterval(gameInterval);
+        // clearInterval(enemyInterval);
+        // clearInterval(bulletInterval);
+        // clearInterval(crashInterval);
+        _status = false;
+        callBackF(_status);
+    } catch (e) {
+        callBackF(e);
+    }
+};
+
 // 点击开始游戏按钮事件
-var set;
-start_btn.onclick = function () {
-    if (set) return console.log('游戏已开始');
+var _status = false;
+
+function begin() {
+    if (_status) return console.log('游戏已开始');
     start.style.display = 'none';
     main.style.display = 'block';
     selfplane.imagenode.style.display = 'block';
-    set = setInterval(begin, gamespeed);
+    startGame();
 }
 
 // 点击结束界面中的继续游戏按钮事件
-function again() {
+function back() {
     location.reload(true);
 }
 
@@ -397,7 +457,9 @@ onresize = function () {
 
 // 浏览器失焦
 window.onblur = function () {
-    pause(0);
+    if (_status) {
+        pause(0);
+    }
 }
 
 // 主监听事件
@@ -405,7 +467,7 @@ eventListen();
 
 // 键盘监听事件
 document.addEventListener('keydown', function (e) {
-    console.log(e.code);
+    // console.log(e.code);
     if (e.code == 'ArrowLeft' || e.code == 'KeyA') {
         selfplane.imagenode.style.left = selfplane.imagenode.offsetLeft - 10 + 'px';
     }
@@ -432,7 +494,13 @@ document.addEventListener('keydown', function (e) {
             pause();
         }
         else if (document.getElementById('start').style.display !== 'none') {
-            start_btn.click();
+            begin();
         }
     };
 })
+
+function callBackF(...args) {
+    if (callback) {
+        console.log(...args);
+    }
+}
