@@ -1,47 +1,60 @@
-//获取整个body界面
+// 获取整个body界面
 var body = document.getElementsByTagName('body')[0];
-//获取游戏主界面
+// 获取游戏主界面
 var main = document.getElementById('main');
-//获取开始游戏界面
+// 获取开始游戏界面
 var start = document.getElementById('start');
-//获取开始游戏按钮
+// 获取开始游戏按钮
 var start_btn = document.getElementById('start_btn');
-//获取游戏中分数显示界面
+// 获取游戏中分数显示界面
 var scorediv = document.getElementById('scorediv');
-//获取游戏中分数界面
+// 获取游戏中分数界面
 var label = document.getElementById('label');
-//获取游戏暂停界面
+// 获取游戏暂停界面
 var suspend = document.getElementById('suspend');
-//获取游戏结束界面
+// 获取游戏结束界面
 var end = document.getElementById('end');
-//获取游戏结束后的分数界面
+// 获取游戏结束后的分数界面
 var result = document.getElementById('result');
-//初始化分数
+// 初始化分数
 var scores = 0;
-
-//定义width 、height
+// 是否触摸
+var istouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+// 定义width 、height
 var width = window.innerWidth;
 var height = window.innerHeight;
 
-//is触摸
-var istouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
+// config配置
+// game
+var gamespeed = 40; // 游戏速度 40
+var gamehardX = 1; // 游戏难度倍数 1
+// enemy
+var enemyhpX = 1 * gamehardX; // 敌人血量倍数 1
+var enemyspeedX = 1 * gamehardX; // 敌人速度倍数 1
+// bullet
+var bulletdamage = 1; // 子弹伤害 1
+var bulletImage = "img/bullet1.png";
+// self
+// var selfhp = 1 * gamehardX; // 自身血量 1
+var selfImage = { 0: 'img/我的飞机.gif', 1: 'img/本方飞机爆炸.gif' };
 
-//创建飞机类
+
+// 创建飞机类
 function plane(hp, X, Y, width, height, score, deathtime, speed, boomimage, imagesrc) {
-    this.planehp = hp;
+    this.planehp = hp * enemyhpX;
     this.planeX = X;
     this.planeY = Y;
     this.planewidth = width;
     this.planeheight = height;
     this.planescore = score;
     this.planedeathtime = deathtime;
-    this.planespeed = speed;
+    this.planespeed = speed * enemyspeedX;
     this.planeboomimage = boomimage;
     this.imagenode = null;
     this.planeisdie = false;
     this.planedeathtimes = 0;
 
-    //移动行为
+    // 移动行为
     this.planemove = function () {
         if (scores <= 50000) {
             this.imagenode.style.top = this.imagenode.offsetTop + this.planespeed + "px";
@@ -62,16 +75,16 @@ function plane(hp, X, Y, width, height, score, deathtime, speed, boomimage, imag
     this.init();
 }
 
-//创建子弹类
+// 创建子弹类
 function bullet(X, Y, width, height, imagesrc) {
     this.bulletX = X;
     this.bulletY = Y;
     this.bulletimage = null;
-    this.bulletattach = 1;
+    this.bulletattach = bulletdamage;
     this.bulletwidth = width;
     this.bulletheight = height;
 
-    //移动行为
+    // 移动行为
     this.bulletmove = function () {
         this.bulletimage.style.top = this.bulletimage.offsetTop - 20 + 'px';
     }
@@ -85,12 +98,12 @@ function bullet(X, Y, width, height, imagesrc) {
     this.init();
 }
 
-//创建单行子弹类
+// 创建单行子弹类
 function fire(X, Y) {
-    bullet.call(this, X, Y, 6, 14, 'img/bullet1.png');
+    bullet.call(this, X, Y, 6, 14, bulletImage);
 }
 
-//创建敌方飞机类
+// 创建敌方飞机类
 /**
  * 
  * @param {*} hp 血量
@@ -108,22 +121,21 @@ function enemy(hp, a, b, width, height, score, deathtime, speed, boomimage, imag
     plane.call(this, hp, random(a, b), -200, width, height, score, deathtime, speed, boomimage, imagesrc);
 }
 
-//产生min到max之间的随机数
+// 产生min到max之间的随机数
 function random(min, max) {
     return Math.floor(min + Math.random() * (max - min));
 }
 
-//创建本方飞机类
+// 创建本方飞机类
 function ourplane(X, Y) {
-    var imagesrc = 'img/我的飞机.gif';
-    plane.call(this, 1, X, Y, 66, 80, 0, 660, 0, 'img/本方飞机爆炸.gif', imagesrc);
+    plane.call(this, 1, X, Y, 66, 80, 0, 660, 0, selfImage[1], selfImage[0]);
     this.imagenode.setAttribute('id', 'ourplane');
 }
 
-//创建本方飞机
+// 创建本方飞机
 var selfplane = new ourplane((width - 66) / 2, height * 450 / 568);
 
-//移动事件
+// 移动事件
 var ourPlane = document.getElementById('ourplane');
 var move = function (e) {
     if (istouch) e = e.touches[0];
@@ -133,77 +145,77 @@ var move = function (e) {
     ourPlane.style.top = selfplaneY - selfplane.planeheight / 2 + "px";
 }
 
-//重开事件
+// 重开事件
 var restart = function () {
     pause(0);
-    //清飞机
+    // 清飞机
     enemys.forEach(function (item) {
         main.removeChild(item.imagenode);
     });
     enemys = [];
-    //清子弹
+    // 清子弹
     bullets.forEach(function (item) {
         main.removeChild(item.bulletimage);
     });
     bullets = [];
-    //显示游戏界面
+    // 显示游戏界面
     suspend.style.display = 'none';
     main.style.display = 'block';
     end.style.display = 'none';
-    //分数
+    // 分数
     scores = 0;
     label.innerHTML = scores;
-    //飞机
+    // 飞机
     selfplane.imagenode.src = 'img/我的飞机.gif';
 
     pause(1);
-    //start_btn.click();
+    // start_btn.click();
 }
 
-//暂停事件
+// 暂停事件
 var number = 0;
 var pause = function (num = number) {
     if (num == 0) {
         suspend.style.display = 'block';
-        if (document.removeEventListener) {
-            //mouse
-            main.removeEventListener('mousemove', move, true);
-            body.removeEventListener('mousemove', border, true);
-            //touch
-            main.removeEventListener('touchmove', move, true);
-            body.removeEventListener('touchmove', border, true);
-        } else if (document.detachEvent) {
-            //mouse
-            main.detachEvent('onmousemove', move);
-            body.detachEvent('onmousemove', border);
-            //touch
-            main.detachEvent('ontouchmove', move);
-            body.detachEvent('ontouchmove', border);
-        }
+        // if (document.removeEventListener) {
+        // mouse
+        main.removeEventListener('mousemove', move, true);
+        body.removeEventListener('mousemove', border, true);
+        // touch
+        main.removeEventListener('touchmove', move, true);
+        body.removeEventListener('touchmove', border, true);
+        // } else if (document.detachEvent) {
+        //     // mouse
+        //     main.detachEvent('onmousemove', move);
+        //     body.detachEvent('onmousemove', border);
+        //     // touch
+        //     main.detachEvent('ontouchmove', move);
+        //     body.detachEvent('ontouchmove', border);
+        // }
         clearInterval(set);
         number = 1;
     } else {
         suspend.style.display = 'none';
         // if (document.addEventListener) {
-        //mouse
+        // mouse
         main.addEventListener('mousemove', move, true);
         body.addEventListener('mousemove', border, true);
-        //touch
+        // touch
         main.addEventListener('touchmove', move, true);
         body.addEventListener('touchmove', border, true);
         // } else if (document.attachEvent) {
-        //     //mouse
+        //     // mouse
         //     main.attachEvent('onmousemove', move);
         //     body.attachEvent('onmousemove', border);
-        //     //touch
+        //     // touch
         //     main.attachEvent('ontouchmove', move);
         //     body.attachEvent('ontouchmove', border);
         // }
-        set = setInterval(begin, 40);
+        set = setInterval(begin, gamespeed);
         number = 0;
     }
 }
-//判断本方飞机是否飞出边界，如果飞出边界，则移除mousemove事件，反之加上mousemove事件
+// 判断本方飞机是否飞出边界，如果飞出边界，则移除mousemove事件，反之加上mousemove事件
 var border = function (e) {
     if (istouch) e = e.touches[0];
     var bodyobjX = e.clientX;
@@ -227,7 +239,7 @@ var border = function (e) {
     }
 }
 
-//暂停界面按钮事件
+// 暂停界面按钮事件
 // if (document.addEventListener) {
 main.addEventListener('mousemove', move, true);
 body.addEventListener('mousemove', border, true);
@@ -250,19 +262,19 @@ suspend.getElementsByTagName('button')[2].addEventListener('click', again, true)
 //     suspend.getElementsByTagName('button')[2].attachEvent('onclick', again);
 // }
 
-//初始化隐藏本方飞机
+// 初始化隐藏本方飞机
 selfplane.imagenode.style.display = "none";
 
-//敌机对象数组
+// 敌机对象数组
 var enemys = [];
 
-//子弹对象数组
+// 子弹对象数组
 var bullets = [];
 var mark = 0;
 var mark1 = 0;
 var backgroundPositionY = 0;
 
-//开始函数
+// 开始函数
 function begin() {
     main.style.backgroundPositionY = backgroundPositionY + "px";
     backgroundPositionY += 0.5;
@@ -271,30 +283,30 @@ function begin() {
     }
     mark++;
 
-    //创建敌方飞机
+    // 创建敌方飞机
     if (mark == 20) {
         mark1++;
-        //中飞机
+        // 中飞机
         if (mark1 % 5 == 0) {
-            enemys.push(new enemy(6, 30, width - 30, 46, 60, 50, 240, random(1, 3), 'img/中飞机爆炸.gif', 'img/enemy3_fly_1.png'))
+            enemys.push(new enemy(6, 25, width - 25, 46, 60, 50, 240, random(1, 3), 'img/中飞机爆炸.gif', 'img/enemy3_fly_1.png'))
         }
-        //大飞机
+        // 大飞机
         if (mark1 % 20 == 0) {
             enemys.push(new enemy(12, 60, width - 60, 110, 164, 100, 360, 1, 'img/大飞机爆炸.gif', 'img/enemy2_fly_1.png'));
         } else {
-            enemys.push(new enemy(1, 10, width - 10, 34, 24, 10, 120, random(1, 6), 'img/小飞机爆炸.gif', 'img/enemy1_fly_1.png'));
+            enemys.push(new enemy(1, 20, width - 20, 34, 24, 10, 120, random(1, 6), 'img/小飞机爆炸.gif', 'img/enemy1_fly_1.png'));
         }
         mark = 0;
     }
 
-    //移动敌方飞机
+    // 移动敌方飞机
     var enemyslen = enemys.length;
     for (var i = 0; i < enemyslen; i++) {
         if (enemys[i].planeisdie != true) {
             enemys[i].planemove();
         }
 
-        //如果敌方飞机超出边界，则删除敌机
+        // 如果敌方飞机超出边界，则删除敌机
         if (enemys[i].imagenode.offsetTop > height) {
             main.removeChild(enemys[i].imagenode);
             enemys.splice(i, 1);
@@ -303,17 +315,17 @@ function begin() {
             selfplane.imagenode.src = "img/本方飞机爆炸.gif";
             end.style.display = 'block';
             result.innerHTML = scores;
-            if (document.removeEventListener) {
-                main.removeEventListener('mousemove', move, true);
-                body.removeEventListener('mousemove', border, true);
-                main.removeEventListener('touchmove', move, true);
-                body.removeEventListener('touchmove', border, true);
-            } else if (document.detachEvent) {
-                main.detachEvent('onmousemove', move);
-                body.detachEvent('onmousemove', border);
-                main.detachEvent('ontouchmove', move);
-                body.detachEvent('ontouchmove', border);
-            }
+            // if (document.removeEventListener) {
+            main.removeEventListener('mousemove', move, true);
+            body.removeEventListener('mousemove', border, true);
+            main.removeEventListener('touchmove', move, true);
+            body.removeEventListener('touchmove', border, true);
+            // } else if (document.detachEvent) {
+            //     main.detachEvent('onmousemove', move);
+            //     body.detachEvent('onmousemove', border);
+            //     main.detachEvent('ontouchmove', move);
+            //     body.detachEvent('ontouchmove', border);
+            // }
             clearInterval(set);
         }
         if (enemys[i].imagenode.offsetLeft < 0 || enemys[i].imagenode.offsetLeft > width) {
@@ -322,7 +334,7 @@ function begin() {
             enemyslen--;
         }
 
-        //当敌方飞机死亡时，经过一段时间后清除敌机
+        // 当敌方飞机死亡时，经过一段时间后清除敌机
         if (enemys[i].planeisdie == true) {
             enemys[i].planedeathtimes += 20;
             if (enemys[i].planedeathtimes == enemys[i].planedeathtime) {
@@ -333,17 +345,17 @@ function begin() {
         }
     }
 
-    //创建子弹
+    // 创建子弹
     if (mark % 2 == 0) {
         bullets.push(new fire(parseInt(selfplane.imagenode.style.left) + 31, parseInt(selfplane.imagenode.style.top) - 10));
     }
 
-    //移动子弹
+    // 移动子弹
     var bulletslen = bullets.length;
     for (var i = 0; i < bulletslen; i++) {
         bullets[i].bulletmove();
 
-        //如果子弹超出边界，则删除子弹
+        // 如果子弹超出边界，则删除子弹
         if (bullets[i].bulletimage.offsetTop < 0 || bullets[i].bulletimage.offsetLeft < 0 || bullets[i].bulletimage.offsetLeft > width) {
             main.removeChild(bullets[i].bulletimage);
             bullets.splice(i, 1);
@@ -351,46 +363,46 @@ function begin() {
         }
     }
 
-    //碰撞判断
+    // 碰撞判断
     for (var k = 0; k < bulletslen; k++) {
         for (var j = 0; j < enemyslen; j++) {
-            //判断碰撞本方飞机
+            // 判断碰撞本方飞机
             if (enemys[j].planeisdie == false) {
                 if ((enemys[j].imagenode.offsetLeft + enemys[j].planewidth >= selfplane.imagenode.offsetLeft) && (enemys[j].imagenode.offsetLeft <= selfplane.imagenode.offsetLeft + selfplane.planewidth)) {
                     if ((enemys[j].imagenode.offsetTop + enemys[j].planeheight >= selfplane.imagenode.offsetTop + 40) && (enemys[j].imagenode.offsetTop <= selfplane.imagenode.offsetTop - 20 + selfplane.planeheight)) {
-                        //碰撞本方飞机，游戏结束，统计分数
+                        // 碰撞本方飞机，游戏结束，统计分数
                         selfplane.imagenode.src = "img/本方飞机爆炸.gif";
                         end.style.display = 'block';
                         result.innerHTML = scores;
-                        if (document.removeEventListener) {
-                            main.removeEventListener('mousemove', move, true);
-                            body.removeEventListener('mousemove', border, true);
-                            main.removeEventListener('touchmove', move, true)
-                            body.removeEventListener('touchmove', border, true);
-                        } else if (document.detachEvent) {
-                            main.detachEvent('onmousemove', move);
-                            body.detachEvent('onmousemove', border);
-                            main.detachEvent('ontouchmove', move);
-                            body.detachEvent('ontouchmove', border);
-                        }
+                        // if (document.removeEventListener) {
+                        main.removeEventListener('mousemove', move, true);
+                        body.removeEventListener('mousemove', border, true);
+                        main.removeEventListener('touchmove', move, true)
+                        body.removeEventListener('touchmove', border, true);
+                        // } else if (document.detachEvent) {
+                        //     main.detachEvent('onmousemove', move);
+                        //     body.detachEvent('onmousemove', border);
+                        //     main.detachEvent('ontouchmove', move);
+                        //     body.detachEvent('ontouchmove', border);
+                        // }
                         clearInterval(set);
                     }
                 }
             }
 
-            //判断子弹与敌机碰撞
+            // 判断子弹与敌机碰撞
             if ((bullets[k].bulletimage.offsetLeft + bullets[k].bulletwidth > enemys[j].imagenode.offsetLeft) && (bullets[k].bulletimage.offsetLeft < enemys[j].imagenode.offsetLeft + enemys[j].planewidth)) {
                 if (bullets[k].bulletimage.offsetTop <= enemys[j].imagenode.offsetTop + enemys[j].planeheight && bullets[k].bulletimage.offsetTop + bullets[k].bulletheight >= enemys[j].imagenode.offsetTop) {
-                    //敌机血量等于收到的子弹攻击力
+                    // 敌机血量等于收到的子弹攻击力
                     enemys[j].planehp = enemys[j].planehp - bullets[k].bulletattach;
-                    //当敌机血量为0，低级图片还为爆炸图片，死亡标记为true,计算得分
-                    if (enemys[j].planehp == 0) {
+                    // 当敌机血量为0，低级图片还为爆炸图片，死亡标记为true,计算得分
+                    if (enemys[j].planehp <= 0) {
                         scores = scores + enemys[j].planescore;
                         label.innerHTML = scores;
                         enemys[j].imagenode.src = enemys[j].planeboomimage;
                         enemys[j].planeisdie = true;
                     }
-                    //删除子弹
+                    // 删除子弹
                     main.removeChild(bullets[k].bulletimage);
                     bullets.splice(k, 1);
                     bulletslen--;
@@ -400,28 +412,28 @@ function begin() {
         }
     }
 }
-//点击开始游戏按钮事件
+// 点击开始游戏按钮事件
 var set;
 start_btn.onclick = function () {
     if (set) return console.log('游戏已开始');
     start.style.display = 'none';
     main.style.display = 'block';
     selfplane.imagenode.style.display = 'block';
-    set = setInterval(begin, 40);
+    set = setInterval(begin, gamespeed);
 }
 
-//点击结束界面中的继续游戏按钮事件
+// 点击结束界面中的继续游戏按钮事件
 function again() {
     location.reload(true);
 }
 
-//更新浏览器大小
+// 更新浏览器大小
 onresize = function () {
     width = window.innerWidth;
     height = window.innerHeight;
 }
 
-//键盘事件
+// 键盘事件
 document.addEventListener('keydown', function (e) {
     if (e.code == 'ArrowLeft' || e.code == 'KeyA') {
         selfplane.imagenode.style.left = selfplane.imagenode.offsetLeft - 10 + 'px';
