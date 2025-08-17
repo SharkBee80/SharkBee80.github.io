@@ -173,48 +173,64 @@ var restart = function () {
     // start_btn.click();
 }
 
-// 暂停事件
-var number = 0;
-var pause = function (num = number) {
-    if (num == 0) {
-        suspend.style.display = 'block';
-        // if (document.removeEventListener) {
-        // mouse
-        main.removeEventListener('mousemove', move, true);
-        body.removeEventListener('mousemove', border, true);
-        // touch
-        main.removeEventListener('touchmove', move, true);
-        body.removeEventListener('touchmove', border, true);
-        // } else if (document.detachEvent) {
-        //     // mouse
-        //     main.detachEvent('onmousemove', move);
-        //     body.detachEvent('onmousemove', border);
-        //     // touch
-        //     main.detachEvent('ontouchmove', move);
-        //     body.detachEvent('ontouchmove', border);
-        // }
-        clearInterval(set);
-        number = 1;
-    } else {
-        suspend.style.display = 'none';
-        // if (document.addEventListener) {
+// 监听事件
+var eventListen = () => {
+    if (document.addEventListener) {
         // mouse
         main.addEventListener('mousemove', move, true);
         body.addEventListener('mousemove', border, true);
         // touch
+        main.addEventListener('touchstart', move, true);
         main.addEventListener('touchmove', move, true);
         body.addEventListener('touchmove', border, true);
-        // } else if (document.attachEvent) {
-        //     // mouse
-        //     main.attachEvent('onmousemove', move);
-        //     body.attachEvent('onmousemove', border);
-        //     // touch
-        //     main.attachEvent('ontouchmove', move);
-        //     body.attachEvent('ontouchmove', border);
-        // }
-        set = setInterval(begin, gamespeed);
-        number = 0;
+    } else if (document.attachEvent) {
+        // mouse
+        main.attachEvent('onmousemove', move);
+        body.attachEvent('onmousemove', border);
+        // touch
+        main.attachEvent('ontouchstart', move);
+        main.attachEvent('ontouchmove', move);
+        body.attachEvent('ontouchmove', border);
     }
+}
+
+var removeListen = () => {
+    if (document.removeEventListener) {
+        // mouse
+        main.removeEventListener('mousemove', move, true);
+        body.removeEventListener('mousemove', border, true);
+        // touch
+        main.removeEventListener('touchstart', move, true);
+        main.removeEventListener('touchmove', move, true);
+        body.removeEventListener('touchmove', border, true);
+    } else if (document.detachEvent) {
+        // mouse
+        main.detachEvent('onmousemove', move);
+        body.detachEvent('onmousemove', border);
+        // touch
+        main.detachEvent('ontouchstart', move);
+        main.detachEvent('ontouchmove', move);
+        body.detachEvent('ontouchmove', border);
+    }
+}
+
+
+
+// 暂停事件
+var pauseNumber = 0;
+var pause = function (num = pauseNumber) {
+    if (num == 0) {
+        suspend.style.display = 'block';
+        removeListen();
+        clearInterval(set);
+        pauseNumber = 1;
+    } else {
+        suspend.style.display = 'none';
+        eventListen();
+        set = setInterval(begin, gamespeed);
+        pauseNumber = 0;
+    }
+    console.log(num);
 }
 // 判断本方飞机是否飞出边界，如果飞出边界，则移除mousemove事件，反之加上mousemove事件
 var border = function (e) {
@@ -222,46 +238,11 @@ var border = function (e) {
     var bodyobjX = e.clientX;
     var bodyobjY = e.clientY;
     if (bodyobjX < 0 || bodyobjX > width || bodyobjY < 0 || bodyobjY > height) {
-        // if (document.removeEventListener) {
-        main.removeEventListener('mousemove', move, true);
-        main.removeEventListener('touchmove', border, true);
-        // } else if (document.detachEvent) {
-        //     main.detachEvent('onmousemove', move);
-        //     main.detachEvent('ontouchmove', border);
-        // }
+        removeListen();
     } else {
-        // if (document.addEventListener) {
-        main.addEventListener('mousemove', move, true);
-        main.addEventListener('touchmove', border, true);
-        // } else if (document.attachEvent) {
-        //     main.attachEvent('onmousemove', move);
-        //     main.attachEvent('ontouchmove', border);
-        // }
+        eventListen();
     }
 }
-
-// 暂停界面按钮事件
-// if (document.addEventListener) {
-main.addEventListener('mousemove', move, true);
-body.addEventListener('mousemove', border, true);
-main.addEventListener('touchmove', move, true);
-body.addEventListener('touchmove', border, true);
-// selfplane.imagenode.addEventListener('click', pause, true);
-
-suspend.getElementsByTagName('button')[0].addEventListener('click', restart, true);
-suspend.getElementsByTagName('button')[1].addEventListener('click', pause, true);
-suspend.getElementsByTagName('button')[2].addEventListener('click', again, true);
-// } else if (document.attachEvent) {
-//     main.attachEvent('onmousemove', move);
-//     body.attachEvent('onmousemove', border);
-//     main.addEventListener('touchmove', move, true);
-//     body.addEventListener('touchmove', border, true);
-//     // selfplane.imagenode.attachEvent('onclick', pause);
-
-//     suspend.getElementsByTagName('button')[0].attachEvent('onclick', restart);
-//     suspend.getElementsByTagName('button')[1].attachEvent('onclick', pause);
-//     suspend.getElementsByTagName('button')[2].attachEvent('onclick', again);
-// }
 
 // 初始化隐藏本方飞机
 selfplane.imagenode.style.display = "none";
@@ -316,17 +297,7 @@ function begin() {
             selfplane.imagenode.src = "img/本方飞机爆炸.gif";
             end.style.display = 'block';
             result.innerHTML = scores;
-            // if (document.removeEventListener) {
-            main.removeEventListener('mousemove', move, true);
-            body.removeEventListener('mousemove', border, true);
-            main.removeEventListener('touchmove', move, true);
-            body.removeEventListener('touchmove', border, true);
-            // } else if (document.detachEvent) {
-            //     main.detachEvent('onmousemove', move);
-            //     body.detachEvent('onmousemove', border);
-            //     main.detachEvent('ontouchmove', move);
-            //     body.detachEvent('ontouchmove', border);
-            // }
+            removeListen();
             clearInterval(set);
         }
         if (enemys[i].imagenode.offsetLeft < 0 || enemys[i].imagenode.offsetLeft > width) {
@@ -375,17 +346,7 @@ function begin() {
                         selfplane.imagenode.src = "img/本方飞机爆炸.gif";
                         end.style.display = 'block';
                         result.innerHTML = scores;
-                        // if (document.removeEventListener) {
-                        main.removeEventListener('mousemove', move, true);
-                        body.removeEventListener('mousemove', border, true);
-                        main.removeEventListener('touchmove', move, true)
-                        body.removeEventListener('touchmove', border, true);
-                        // } else if (document.detachEvent) {
-                        //     main.detachEvent('onmousemove', move);
-                        //     body.detachEvent('onmousemove', border);
-                        //     main.detachEvent('ontouchmove', move);
-                        //     body.detachEvent('ontouchmove', border);
-                        // }
+                        removeListen();
                         clearInterval(set);
                     }
                 }
@@ -434,8 +395,17 @@ onresize = function () {
     height = window.innerHeight;
 }
 
-// 键盘事件
+// 浏览器失焦
+window.onblur = function () {
+    pause(0);
+}
+
+// 主监听事件
+eventListen();
+
+// 键盘监听事件
 document.addEventListener('keydown', function (e) {
+    console.log(e.code);
     if (e.code == 'ArrowLeft' || e.code == 'KeyA') {
         selfplane.imagenode.style.left = selfplane.imagenode.offsetLeft - 10 + 'px';
     }
