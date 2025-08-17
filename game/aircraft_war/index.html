@@ -11,14 +11,17 @@
 <body>
     <div id="all">
         <div id="start">
-            <button onclick="begin()">开始游戏</button>
+            <div id="menu">
+                <button onclick="begin()">开始游戏</button>
+                <button onclick="setting()">设置</button>
+            </div>
         </div>
         <div id="main">
             <div id="scorediv">
                 <label>分数：</label>
                 <label id="label">0</label>
             </div>
-            <div id="menu">
+            <div id="pause">
                 <svg class="icon" viewBox="0 0 1024 1024" width="32" height="32" onclick="pause()">
                     <path
                         d="M533.333333 896C332.8 896 170.666667 733.866667 170.666667 533.333333S332.8 170.666667 533.333333 170.666667 896 332.8 896 533.333333 733.866667 896 533.333333 896z m0-42.666667c174.933333 0 320-145.066667 320-320S708.266667 213.333333 533.333333 213.333333 213.333333 358.4 213.333333 533.333333 358.4 853.333333 533.333333 853.333333zM469.333333 426.666667v213.333333h-42.666666v-213.333333h42.666666z m170.666667 0v213.333333h-42.666667v-213.333333h42.666667z"
@@ -29,6 +32,7 @@
             <div id="suspend">
                 <button onclick="restart()">重新开始</button>
                 <button onclick="pause()">继续游戏</button>
+                <button onclick="setting()">设置</button>
                 <button onclick="back()">回到主页</button>
             </div>
             <div id="end">
@@ -38,6 +42,63 @@
                     <button onclick="restart()">继续</button>
                     <button onclick="back()">回到主页</button>
                 </div>
+            </div>
+        </div>
+        <div id="setting" style="display: none;">
+            <div id="board">
+                <div class="item">
+                    <label for="outline">底线</label>
+                    <input type="checkbox" id="outline" checked></input>
+                </div>
+                <div class="item">
+                    <label for="X">游戏倍数</label>
+                    <input type="range" min="1" max="2" value="1" id="X" step="1"
+                        onchange="document.getElementById('X_value').innerHTML = this.value"></input>
+                    <a id="X_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="bg">背景速度</label>
+                    <input type="range" min="1" max="99" value="1" id="bg" step="1"
+                        onchange="document.getElementById('bg_value').innerHTML = this.value"></input>
+                    <a id="bg_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="hard">难度</label>
+                    <input type="range" min="1" max="3" value="1" id="hard" step="1"
+                        onchange="document.getElementById('hard_value').innerHTML = this.value"></input>
+                    <a id="hard_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="enemy">敌机速度</label>
+                    <input type="range" min="1" max="3" value="1" id="enemy" step="1"
+                        onchange="document.getElementById('enemy_value').innerHTML = this.value"></input>
+                    <a id="enemy_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="hp">敌机血量</label>
+                    <input type="range" min="1" max="3" value="1" id="hp" step="1"
+                        onchange="document.getElementById('hp_value').innerHTML = this.value"></input>
+                    <a id="hp_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="bullet_speed">子弹速度</label>
+                    <input type="range" min="1" max="2" value="1" id="bullet_speed" step="1"
+                        onchange="document.getElementById('bullet_speed_value').innerHTML = this.value"></input>
+                    <a id="bullet_speed_value">1</a>
+                </div>
+                <div class="item">
+                    <label for="damage">子弹伤害</label>
+                    <input type="range" min="1" max="99" value="1" id="damage" step="1"
+                        onchange="document.getElementById('damage_value').innerHTML = this.value"></input>
+                    <a id="damage_value">1</a>
+                </div>
+                <div class="item" style="display: none;">
+                    <label for="bullet_num">子弹数量</label>
+                    <input type="range" min="1" max="3" value="1" id="bullet_num" step="1"
+                        onchange="document.getElementById('bullet_num_value').innerHTML = this.value"></input>
+                    <a id="bullet_num_value">1</a>
+                </div>
+                <button onclick="saveSet()">保存</button>
             </div>
         </div>
     </div>

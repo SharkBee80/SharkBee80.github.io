@@ -15,6 +15,11 @@ button {
   outline: none;
 }
 
+button:hover {
+  cursor: pointer;
+  background-color: #a9adad !important;
+}
+
 #all {
   width: 100%;
   height: auto;
@@ -33,14 +38,20 @@ button {
 }
 
 #start button {
-  position: absolute;
-  top: calc(50vh * 568 / 400);
-  left: calc(50vw - 75px);
   width: 150px;
   height: 50px;
   border: 1px solid dimgray;
   border-radius: 50px;
   background-color: #c4c9ca;
+  margin-bottom: 10px;
+}
+
+#menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: calc(50vh * 568 / 400);
+  left: calc(50vw - 75px);
 }
 
 #main {
@@ -63,7 +74,7 @@ button {
   /* display: none; */
 }
 
-#menu {
+#pause {
   font-size: 20px;
   font-weight: bold;
   position: absolute;
@@ -72,7 +83,7 @@ button {
   /* display: none; */
 }
 
-#menu button {
+#pause button {
   width: 25px;
   height: 25px;
   font-weight: bold;
@@ -83,7 +94,7 @@ button {
 
 #suspend {
   width: 150px;
-  height: 150px;
+  /* height: 150px; */
   position: absolute;
   top: calc(50vh);
   left: calc(50vw - 75px);
@@ -98,11 +109,6 @@ button {
   border: 1px solid dimgray;
   border-radius: 30px;
   background-color: #c4c9ca;
-}
-
-button:hover {
-  cursor: pointer;
-  background-color: #a9adad !important;
 }
 
 #end {
@@ -147,4 +153,57 @@ button:hover {
   border-bottom: 1px solid dimgray;
   font-size: 34px;
   line-height: 100px;
+}
+
+/* #setting {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+} */
+
+#board {
+  position: absolute;
+  top: calc(50vh - 150px);
+  left: calc(50vw - 150px - 8px);
+  width: 300px;
+  /* height: 300px; */
+  background-color: #d7ddde;
+  border-radius: 20px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  font-weight: bold;
+  font-size: large;
+}
+
+#board label {
+  width: 30%;
+  text-align: justify;
+  text-align-last: justify;
+  margin-right: 5%;
+}
+
+#board input {
+  width: 50%;
+  margin-right: 5%;
+}
+
+#board button  {
+  width: 60%;
+  height: 30px;
+  border: 1px solid dimgray;
+  border-radius: 30px;
+  background-color: #c4c9ca;
+  margin: auto;
+}
+
+#board a {
+  width: 10%;
+}
+
+#board .item {
+  display: flex;
+  margin-bottom: 10px;
 }

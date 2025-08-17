@@ -27,16 +27,17 @@ var height = window.innerHeight;
 // config配置
 var callback = false;// 是否回调
 // game
-var gamespeed = 40; // 游戏速度 40
-var gamehardX = 1; // 游戏难度倍数 1
-var gamebgspeedX = 1; // 背景速度
-var outline = false; // 出线为输
+var gamespeedX = 1; // 游戏速度倍数 1~2
+var gamespeed = 40 / gamespeedX; // 游戏速度 40>N
+var gamehardX = 1; // 游戏难度倍数 1~N
+var gamebgspeedX = 1; // 背景速度 1~N
+var outline = true; // 出线为输
 // enemy
-var enemyhpX = 1 * gamehardX; // 敌人血量倍数 1
-var enemyspeedX = 1 * gamehardX; // 敌人速度倍数 1
+var enemyhpX = 1 * gamehardX; // 敌人血量倍数 1~N
+var enemyspeedX = 1 * gamehardX; // 敌人速度倍数 1~N
 // bullet
-var bulletdamage = 1; // 子弹伤害 1
-var bulletspeedX = 1; // 子弹速度倍数 1
+var bulletdamage = 1; // 子弹伤害 1~N
+var bulletspeedX = 1; // 子弹速度倍数 1~2
 var bulletImage = "img/bullet1.png";
 // self
 // var selfhp = 1 * gamehardX; // 自身血量 1
@@ -273,23 +274,22 @@ function gameInter() {
     // if (backgroundPositionY == height) {
     //     backgroundPositionY = 0;
     // }
-    if (scores % 1000) {
-        gamebgspeedX += 0.01;
-    }
 
     mark++;
 
     // 创建敌方飞机
-    if (mark == 20) {
+    if (mark == 20) { // 800ms = gamespeed * mark = 40 * 20
         mark1++;
         // 中飞机
-        if (mark1 % 5 == 0) {
+        if (mark1 % 5 == 0) { // 4000ms = gamespeed * mark * 5 = 40 * 20 * 5
             enemys.push(new enemy(6, 10, width - 10 - 46, 46, 60, 50, 240, random(1, 3), 'img/中飞机爆炸.gif', 'img/enemy3_fly_1.png'))
         }
         // 大飞机
-        if (mark1 % 20 == 0) {
+        if (mark1 % 20 == 0) { // 20000ms = gamespeed * mark * 20 = 40 * 20 * 20
             enemys.push(new enemy(12, 10, width - 10 - 110, 110, 164, 100, 360, 1, 'img/大飞机爆炸.gif', 'img/enemy2_fly_1.png'));
-        } else {
+        }
+        // 小飞机
+        else {
             enemys.push(new enemy(1, 10, width - 10 - 34, 34, 24, 10, 120, random(1, 6), 'img/小飞机爆炸.gif', 'img/enemy1_fly_1.png'));
         }
         mark = 0;
@@ -334,7 +334,7 @@ function gameInter() {
     }
 
     // 创建子弹
-    if (mark % 2 == 0) {
+    if (mark % (2 / bulletspeedX) == 0) { // 80ms = gamespeed * mark * 2 = 40 * 2
         bullets.push(new fire(parseInt(selfplane.imagenode.style.left) + 31, parseInt(selfplane.imagenode.style.top) - 10));
     }
 
