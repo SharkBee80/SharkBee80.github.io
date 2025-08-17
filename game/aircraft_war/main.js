@@ -28,6 +28,7 @@ var height = window.innerHeight;
 // game
 var gamespeed = 40; // 游戏速度 40
 var gamehardX = 1; // 游戏难度倍数 1
+var outline = true; // 出线为输
 // enemy
 var enemyhpX = 1 * gamehardX; // 敌人血量倍数 1
 var enemyspeedX = 1 * gamehardX; // 敌人速度倍数 1
@@ -288,13 +289,13 @@ function begin() {
         mark1++;
         // 中飞机
         if (mark1 % 5 == 0) {
-            enemys.push(new enemy(6, 25, width - 25, 46, 60, 50, 240, random(1, 3), 'img/中飞机爆炸.gif', 'img/enemy3_fly_1.png'))
+            enemys.push(new enemy(6, 10, width - 10 - 46, 46, 60, 50, 240, random(1, 3), 'img/中飞机爆炸.gif', 'img/enemy3_fly_1.png'))
         }
         // 大飞机
         if (mark1 % 20 == 0) {
-            enemys.push(new enemy(12, 60, width - 60, 110, 164, 100, 360, 1, 'img/大飞机爆炸.gif', 'img/enemy2_fly_1.png'));
+            enemys.push(new enemy(12, 10, width - 10 - 110, 110, 164, 100, 360, 1, 'img/大飞机爆炸.gif', 'img/enemy2_fly_1.png'));
         } else {
-            enemys.push(new enemy(1, 20, width - 20, 34, 24, 10, 120, random(1, 6), 'img/小飞机爆炸.gif', 'img/enemy1_fly_1.png'));
+            enemys.push(new enemy(1, 10, width - 10 - 34, 34, 24, 10, 120, random(1, 6), 'img/小飞机爆炸.gif', 'img/enemy1_fly_1.png'));
         }
         mark = 0;
     }
@@ -307,7 +308,7 @@ function begin() {
         }
 
         // 如果敌方飞机超出边界，则删除敌机
-        if (enemys[i].imagenode.offsetTop > height) {
+        if (enemys[i].imagenode.offsetTop > height && outline) {
             main.removeChild(enemys[i].imagenode);
             enemys.splice(i, 1);
             enemyslen--;
