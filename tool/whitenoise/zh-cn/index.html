@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>白噪声在线</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="白噪声可以简单的理解为所有能被人类听到的声音都是合成的，比如：电视损失、空调声音。">
+    <meta name="keywords"
+        content="white noise white noise online, background noise, relaxing sounds, ambient noise, ambient sounds, rain, wind, coffee, ocean, sea, waves, chatter, tinnitus, ADD, ADHD,白噪声在线白噪声，背景噪声，放松的声音，环境噪声，环境声音，雨，风，咖啡，海洋，海，波浪，喋喋不休，耳鸣，ADD，ADHD">
+    <meta property="og:title" content="网上的白噪音">
+    <meta property="og:type" content="website">
+    <link rel="stylesheet" type="text/css" href="../assets/css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="../assets/css/jquery.powertip.css">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicon-16x16.png">
+    <script src="../assets/js/jquery.min.js"></script>
+    <!-- Powertip -->
+    <script type="text/javascript" src="../assets/js/core.js"></script>
+    <script type="text/javascript" src="../assets/js/csscoordinates.js"></script>
+    <script type="text/javascript" src="../assets/js/displaycontroller.js"></script>
+    <script type="text/javascript" src="../assets/js/placementcalculator.js"></script>
+    <script type="text/javascript" src="../assets/js/tooltipcontroller.js"></script>
+    <script type="text/javascript" src="../assets/js/utility.js"></script>
+    <!-- end-Powertip -->
+</head>
+
+<body onload="init();">
+    <div class="tile1">
+        <div id="title" style="cursor: pointer;">
+            白噪声
+            <span class="titlelight" style="cursor: pointer;">在线的</span>
+            <br>
+        </div>
+        <div class="ctrSection">
+            <img src="../assets/img/volDown.png" class="ctrlImg pTn" onclick="volDown()"
+                onmouseover="msg('Volume Down')" alt="Volume Down">
+            <img id="levelBars" src="../assets/img/level3.png" class="lvlImg" alt="Level Bars">
+            <img src="../assets/img/volUp.png" class="ctrlImg pTn" onclick="volUp()" onmouseover="msg('Volume Up')"
+                alt="Volume Up">
+        </div>
+        <div id="msg">向下滚动以获取更多信息！
+        </div>
+        <div id="iconSet" class="ctrIcons"></div>
+    </div>
+    <div class="tile2">
+        <div class="anchor" id="controls"></div>
+        <div class="group">
+            <h3>语气</h3>
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq0" onclick="eq(this.id)"
+                style="background-color: #ccc;" title="Neutral (Flat)" alt="Neutral (Flat)">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq1" onclick="eq(this.id)"
+                style="background-color: #960;" title="Warm" alt="Warm">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq2" onclick="eq(this.id)"
+                style="background-color: #690;" title="Soft" alt="Soft">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq3" onclick="eq(this.id)"
+                style="background-color: #00a;" title="Bright" alt="Bright">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq4" onclick="eq(this.id)"
+                style="background-color: #069;" title="Crisp" alt="Crisp">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq5" onclick="eq(this.id)"
+                style="background-color: #600;" title="Profound" alt="Profound">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq6" onclick="eq(this.id)"
+                style="background-color: #906;" title="Speech Blocker" alt="Speech Blocker">
+            <img src="../assets/img/eq.png" class="ctrlImg pTn" id="eq7" onclick="eq(this.id)"
+                style="background-color: #000;" title="Fletcher-Munson" alt="Fletcher-Munson">
+        </div>
+        <div class="group" style="display: none">
+            <h3>活泼</h3>
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo0" onclick="motion(this.id)"
+                style="background-color: #ccc;" title="None (Static)" alt="None (Static)">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo3" onclick="motion(this.id)"
+                style="background-color: #069;" title="Normal" alt="Normal">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo1" onclick="motion(this.id)"
+                style="background-color: #960;" title="Subtle" alt="Subtle">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo2" onclick="motion(this.id)"
+                style="background-color: #a00;" title="Fast" alt="Fast">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo4" onclick="motion(this.id)"
+                style="background-color: #690;" title="Slow" alt="Slow">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo5" onclick="motion(this.id)"
+                style="background-color: #600;" title="Sleepy" alt="Sleepy">
+            <img src="../assets/img/motion.png" class="ctrlImg pTn" id="mo6" onclick="motion(this.id)"
+                style="background-color: #000;" title="Lethargic" alt="Lethargic">
+        </div>
+        <div class="group">
+            <h3>用户集</h3>
+            <p>
+                保存<input id="newPresetName" type="text" name="newPresetName" size="12" maxlength="16" placeholder="命名"
+                    onkeydown="if (event.keyCode == 13) {addPreset(document.getElementById('newPresetName').value); return false;}">
+                <img src="../assets/img/save.png" class="ctrlImg pTn"
+                    onclick="addPreset(document.getElementById('newPresetName').value);" alt="Save Set"
+                    title="Save Preset">
+            </p>
+            <p>
+                <span id="presetUI"></span>
+            </p>
+        </div>
+        <div class="anchor" id="intro"></div>
+        <div class="sectionFirst">
+            <p>欢迎来到白噪声在线！！</p>
+            <p></p>
+            <p>噪音并不总是你开放式办公室里健谈的同事，或者你睡觉时耳鸣的声音。尽管“噪音”这个词已经获得了否定的含义，但它可以是美丽的，例如海洋的声音、雨声或夏天的田野。</p>
+            <p>像这个网站这样的在线背景噪音机器背后的想法是利用你喜欢的噪音来掩盖你不喜欢的噪音。这个概念很简单，效果非常好，并且不需要昂贵的设备，例如主动降噪耳机。</p>
+            <p>因为这些噪音可以通过网络浏览器获得，所以您可以选择您最喜欢的声音。您可以调整它们的相对水平以实现完美平衡的背景噪音，从而提高您的工作效率、增加您的注意力、加深您的冥想课程或在晚上入睡。噪音机器的用途非常多样！
+            </p>
+        </div>
+    </div>
+    <script type="text/javascript" src="../assets/js/main.js"></script>
+    <!-- QC_Ngang -->
+</body>
+
+</html>
