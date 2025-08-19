@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <title>shut down</title>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-</head>
-
-<body>
-  <script>
+<script>
     try {
-      window.opener = null;
-      window.open('', '_self');
-      window.close();
+        window.opener = null;
+        window.open('', '_self');
+        window.close();
     } catch (e) {
-      // 出错时跳转
-      window.location.href = 'about:blank';
+        // 出错时跳转
+        window.location.href = 'about:blank';
     }
-  </script>
-</body>
-
-</html>
+</script>
