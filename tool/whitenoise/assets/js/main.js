@@ -236,7 +236,7 @@ function iconMouseUp(name) {
 }
 
 function iconTouchStart(name) {
-	decreaseLevel(name);
+	// decreaseLevel(name);
 	levelTimer = setTimeout(function () {
 		iconMute(name);
 	}, 1000);
