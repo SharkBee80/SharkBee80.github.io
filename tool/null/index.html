@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <style>
+        div {
+            display: flex;
+            justify-content: space-around;
+            column-gap: 10px;
+        }
+        button {
+            background-color: #888888;
+            color: #000;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <a id="status">off</a>
+    <div>
+        <button id="btn0" onclick="on(1)">全</button>
+        <button id="btn1" onclick="on(0.00508)">微</button>
+        <button id="btn2" onclick="on(0.0000000002)">无</button>
+    </div>
+    <script>
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        const osc = ctx.createOscillator();
+        osc.frequency.setValueAtTime(1, ctx.currentTime);
+
+        const gain = ctx.createGain();
+
+        gain.gain.value = 0.0; // 初始静音
+        osc.type = "sine";      // 正弦波
+        osc.connect(gain).connect(ctx.destination);
+        osc.start(); // 可以自动播放，因为静音
+        // osc.stop(ctx.currentTime + 10); // 10秒示例
+
+        const txt = document.querySelector("#status");
+
+        async function on(value = 0.00508) {
+            if (ctx.state === 'suspended') ctx.resume();
+            await new Promise(r => setTimeout(r, 50));
+            if (ctx.state === 'running') {
+                //gain.gain.value = 0.0000000001; // 用户点击后才调到低音量
+                gain.gain.value = value;
+                txt.innerHTML = "on : " + String(value);
+            };
+        }
+
+        // document.addEventListener('click', on);
+        // document.addEventListener('touchstart', on);
+
+    </script>
+</body>
+
+</html>
